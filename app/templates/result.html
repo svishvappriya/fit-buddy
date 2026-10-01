@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitBuddy – Your Custom Plan for {{ username }}</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="/" class="brand-link">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-title">FitBuddy</span>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-item">New Plan</a>
+      <a href="/view-all-users" class="nav-item">All Athletes</a>
+    </div>
+  </nav>
+
+  <!-- Container -->
+  <main class="container">
+    
+    <!-- Status Banner for Updates -->
+    {% if is_updated %}
+    <div class="alert alert-success">
+      <span>✅</span>
+      <div>
+        <strong>Workout Plan Successfully Updated!</strong>
+        <p style="font-size: 0.88rem; font-weight: 400; margin-top: 0.2rem;">
+          Modifications applied for feedback: <em>"{{ feedback_applied }}"</em>
+        </p>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Athlete Overview Profile Card -->
+    <section class="card" style="margin-bottom: 2rem;">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span>🏋️‍♂️</span> Athlete Profile: {{ username }}
+        </h2>
+        <span class="user-badge">ID #{{ user_id }}</span>
+      </div>
+
+      <div class="profile-pills">
+        <div class="pill-box">
+          <span class="pill-label">Athlete Name</span>
+          <span class="pill-val">{{ username }}</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">Age</span>
+          <span class="pill-val">{{ age }} yrs</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">Body Weight</span>
+          <span class="pill-val">{{ weight }} kg</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">Primary Goal</span>
+          <span class="pill-val accent">{{ goal }}</span>
+        </div>
+        <div class="pill-box">
+          <span class="pill-label">Intensity Level</span>
+          <span class="pill-val">{{ intensity }}</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <a href="/" class="btn btn-secondary">
+          <span>←</span> New Intake
+        </a>
+        <a href="/view-all-users" class="btn btn-secondary">
+          <span>📊</span> View All Athletes
+        </a>
+      </div>
+    </section>
+
+    <!-- Gemini Flash Nutrition Callout -->
+    {% if nutrition_tip %}
+    <section class="nutrition-callout">
+      <div class="callout-header">
+        <span class="callout-tag">⚡ Gemini Flash Nutrition Protocol</span>
+        <span class="callout-title">Daily Fueling &amp; Recovery Strategy</span>
+      </div>
+      <p class="callout-body">{{ nutrition_tip }}</p>
+    </section>
+    {% endif %}
+
+    <!-- 7-Day Workout Routine Output -->
+    <section class="card plan-container">
+      <div class="card-header">
+        <h2 class="card-title">
+          <span>📅</span> 7-Day Periodized Workout Blueprint
+        </h2>
+        {% if is_updated %}
+          <span class="goal-pill" style="background: rgba(0, 245, 155, 0.15); color: var(--primary-neon);">
+            Gemini 1.5 Pro (Revised)
+          </span>
+        {% else %}
+          <span class="goal-pill">Gemini 1.5 Pro</span>
+        {% endif %}
+      </div>
+
+      <pre class="plan-content">{{ workout_plan }}</pre>
+    </section>
+
+    <!-- Feedback & Plan Adjustment Section -->
+    <section class="feedback-box">
+      <h3 class="feedback-title">
+        <span>🔄</span> Customize or Refine This Routine
+      </h3>
+      <p class="feedback-subtitle">
+        Have equipment constraints, muscle soreness, joint limitations, or want more leg volume? Describe your adjustments below and Gemini 1.5 Pro will rewrite the plan while maintaining overall periodization.
+      </p>
+
+      <form action="/submit-feedback" method="POST">
+        <!-- Hidden User ID -->
+        <input type="hidden" name="user_id" value="{{ user_id }}">
+
+        <div class="form-group">
+          <label for="user_feedback" class="form-label">
+            <span>💬</span> Your Feedback / Adaptation Request
+          </label>
+          <textarea 
+            id="user_feedback" 
+            name="user_feedback" 
+            class="form-textarea" 
+            placeholder="e.g. 'I do not have access to a barbell for bench press, please substitute with dumbbells', or 'My knees hurt during squats, please swap for joint-friendly alternatives'." 
+            required
+          ></textarea>
+        </div>
+
+        <div style="margin-top: 1.25rem;">
+          <button type="submit" class="btn btn-cyan">
+            <span>✨</span> Update Plan with Gemini Pro
+          </button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="footer">
+    <p>FitBuddy &copy; 2026. Powered by Google Gemini AI Models &amp; FastAPI.</p>
+  </footer>
+
+</body>
+</html>

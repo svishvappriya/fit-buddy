@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitBuddy – Athlete Database &amp; Plan History</title>
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navigation Bar -->
+  <nav class="navbar">
+    <a href="/" class="brand-link">
+      <span class="brand-icon">⚡</span>
+      <span class="brand-title">FitBuddy</span>
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-item">New Plan</a>
+      <a href="/view-all-users" class="nav-item active">All Athletes</a>
+    </div>
+  </nav>
+
+  <!-- Container -->
+  <main class="container">
+    
+    <header class="hero" style="margin-bottom: 2rem; text-align: left;">
+      <div class="hero-badge">Database &amp; Plan Registry</div>
+      <h1 class="hero-title" style="font-size: 2.2rem;">Athlete Roster &amp; <span>Workout History</span></h1>
+      <p class="hero-subtitle" style="margin: 0;">
+        Review all registered athletes, their target biometric metrics, initial AI routines, and custom adapted plans.
+      </p>
+    </header>
+
+    <div style="margin-bottom: 1.5rem; display: flex; justify-content: flex-end;">
+      <a href="/" class="btn btn-primary">
+        <span>+</span> Generate New Workout
+      </a>
+    </div>
+
+    <!-- Users Table Card -->
+    <div class="table-wrapper">
+      {% if users and users|length > 0 %}
+      <table class="gym-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Weight</th>
+            <th>Goal</th>
+            <th>Intensity</th>
+            <th>Original Plan (Gemini Pro)</th>
+            <th>Updated Plan (Feedback Adapted)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for user in users %}
+          <tr>
+            <td>
+              <span class="user-badge">#{{ user.id }}</span>
+            </td>
+            <td>
+              <strong style="color: #ffffff;">{{ user.name }}</strong>
+            </td>
+            <td>{{ user.age }} yrs</td>
+            <td>{{ user.weight }} kg</td>
+            <td>
+              <span class="goal-pill">{{ user.goal }}</span>
+            </td>
+            <td>
+              <span class="intensity-pill">{{ user.intensity }}</span>
+            </td>
+            <td>
+              {% if user.plans and user.plans|length > 0 and user.plans[0].original_plan %}
+                <pre class="plan-table-cell">{{ user.plans[0].original_plan }}</pre>
+              {% else %}
+                <span style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">No initial plan recorded</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if user.plans and user.plans|length > 0 and user.plans[0].updated_plan %}
+                <pre class="plan-table-cell updated">{{ user.plans[0].updated_plan }}</pre>
+              {% else %}
+                <span style="color: var(--text-muted); font-size: 0.85rem; font-style: italic;">No feedback revisions</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <div style="padding: 3.5rem 2rem; text-align: center;">
+        <span style="font-size: 3rem; display: block; margin-bottom: 1rem;">🏋️‍♂️</span>
+        <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem; color: #ffffff;">No Athletes in the Roster Yet</h3>
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+          Generate your first AI-tailored 7-day workout plan to populate the database.
+        </p>
+        <a href="/" class="btn btn-primary">
+          <span>⚡</span> Generate First Plan
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+  </main>
+
+  <!-- Global Footer -->
+  <footer class="footer">
+    <p>FitBuddy &copy; 2026. Powered by Google Gemini AI Models &amp; FastAPI.</p>
+  </footer>
+
+</body>
+</html>
